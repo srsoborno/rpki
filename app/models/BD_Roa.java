@@ -19,10 +19,6 @@ public class BD_Roa extends play.db.ebean.Model {
 	public Date fechaFin;
 	public int asn;
 	
-	@Required
-	@ManyToOne(cascade=CascadeType.ALL)
-	//public List<BD_Statement> prefijos;
-	public BD_Roa_Statement prefijos = new BD_Roa_Statement();
 	
 	public Date fechaFirma;
 	public URI crlUri;
@@ -31,10 +27,6 @@ public class BD_Roa extends play.db.ebean.Model {
 	public String EESujeto;
 	public String EEEmisor;
 	
-	@Required
-	@ManyToOne(cascade=CascadeType.ALL)
-	//	public List<BD_Bloque> EERecursos;
-	public BD_Roa_Bloque EERecursos = new BD_Roa_Bloque();
 	
 	public String EEClavePublica;
 	public Date EEfechaInicio;

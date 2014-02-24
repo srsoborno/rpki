@@ -17,6 +17,11 @@ public class BD_Roa_Statement extends play.db.ebean.Model {
 	public BD_Roa_Bloque bloque;
 	
 	@Required
+	@ManyToOne(cascade=CascadeType.ALL)
+	//public List<BD_Statement> prefijos;
+	public BD_Roa roa = new BD_Roa();
+	
+	@Required
 	@Min(0)
 	@Max(32) //Ejemplo para marcar minimo y maximo del campo
 	public int largoMaximo;

@@ -64,14 +64,12 @@ create table bd_roa (
   fecha_inicio              datetime,
   fecha_fin                 datetime,
   asn                       integer,
-  prefijos_id_statement     integer,
   fecha_firma               datetime,
   crl_uri                   varchar(255),
   cer_padre                 varchar(255),
   content_type              varchar(255),
   eesujeto                  varchar(255),
   eeemisor                  varchar(255),
-  eerecursos_id_bloque      integer,
   eeclave_publica           varchar(255),
   eefecha_inicio            datetime,
   eefecha_fin               datetime,
@@ -83,21 +81,23 @@ create table bd_roa_bloque (
   id_bloque                 integer auto_increment not null,
   prefijo                   varchar(255),
   largo                     integer,
+  roa_eeserial              integer,
   constraint pk_bd_roa_bloque primary key (id_bloque))
 ;
 
 create table bd_roa_statement (
   id_statement              integer auto_increment not null,
+  roa_eeserial              integer,
   largo_maximo              integer,
   constraint pk_bd_roa_statement primary key (id_statement))
 ;
 
 alter table bd_mft add constraint fk_bd_mft_mftFiles_1 foreign key (mft_files_id_mft_file) references bd_mft_files (id_mft_file) on delete restrict on update restrict;
 create index ix_bd_mft_mftFiles_1 on bd_mft (mft_files_id_mft_file);
-alter table bd_roa add constraint fk_bd_roa_prefijos_2 foreign key (prefijos_id_statement) references bd_roa_statement (id_statement) on delete restrict on update restrict;
-create index ix_bd_roa_prefijos_2 on bd_roa (prefijos_id_statement);
-alter table bd_roa add constraint fk_bd_roa_EERecursos_3 foreign key (eerecursos_id_bloque) references bd_roa_bloque (id_bloque) on delete restrict on update restrict;
-create index ix_bd_roa_EERecursos_3 on bd_roa (eerecursos_id_bloque);
+alter table bd_roa_bloque add constraint fk_bd_roa_bloque_roa_2 foreign key (roa_eeserial) references bd_roa (eeserial) on delete restrict on update restrict;
+create index ix_bd_roa_bloque_roa_2 on bd_roa_bloque (roa_eeserial);
+alter table bd_roa_statement add constraint fk_bd_roa_statement_roa_3 foreign key (roa_eeserial) references bd_roa (eeserial) on delete restrict on update restrict;
+create index ix_bd_roa_statement_roa_3 on bd_roa_statement (roa_eeserial);
 
 
 

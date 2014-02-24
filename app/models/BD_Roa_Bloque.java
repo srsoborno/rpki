@@ -20,5 +20,10 @@ public class BD_Roa_Bloque extends Model {
 	@Required
 	@MaxLength(2) //Ejemplo para maximo dos caracteres
 	public int largo;
+	
+	@Required
+	@ManyToOne(cascade=CascadeType.ALL)
+	//	public List<BD_Bloque> EERecursos;
+	public BD_Roa roa = new BD_Roa();
 
 }
