@@ -11,7 +11,7 @@ import views.html.helper.form;
 public class Application extends Controller {
 
     public static Result index() {
-        return ok(index.render("Hola Timmy, anda la base de nuestro proyecto!!"));
+        return ok(index.render("Hola Timmy!!"));
     }
     
     public static Result addRoa(){
