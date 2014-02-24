@@ -1,6 +1,5 @@
 package controllers;
 
-import models.BD_roa;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
@@ -14,10 +13,5 @@ public class Application extends Controller {
         return ok(index.render("Hola Timmy!!"));
     }
     
-    public static Result addRoa(){
-    	BD_roa roa = Form.form(BD_roa.class).bindFromRequest().get();
-    	roa.save();
-    	return redirect(routes.Application.index());
-    }
 
 }
