@@ -8,6 +8,7 @@ create table bd_cer (
   cer_tipo_archivo          varchar(255),
   cer_public_key            varchar(255),
   cer_type                  varchar(255),
+  timo                      varchar(255),
   constraint pk_bd_cer primary key (cer_serial_number))
 ;
 
@@ -79,25 +80,27 @@ create table bd_roa (
 
 create table bd_roa_bloque (
   id_bloque                 integer auto_increment not null,
+  bd_roa_roa_eeserial_number integer not null,
   prefijo                   varchar(255),
   largo                     integer,
-  roa_roa_eeserial_number   integer,
   constraint pk_bd_roa_bloque primary key (id_bloque))
 ;
 
 create table bd_roa_statement (
   id_statement              integer auto_increment not null,
-  roa_roa_eeserial_number   integer,
+  bd_roa_roa_eeserial_number integer not null,
+  st_prefijo                varchar(255),
+  st_largo                  integer,
   largo_maximo              integer,
   constraint pk_bd_roa_statement primary key (id_statement))
 ;
 
 alter table bd_mft add constraint fk_bd_mft_mftFiles_1 foreign key (mft_files_id_mft_file) references bd_mft_files (id_mft_file) on delete restrict on update restrict;
 create index ix_bd_mft_mftFiles_1 on bd_mft (mft_files_id_mft_file);
-alter table bd_roa_bloque add constraint fk_bd_roa_bloque_roa_2 foreign key (roa_roa_eeserial_number) references bd_roa (roa_eeserial_number) on delete restrict on update restrict;
-create index ix_bd_roa_bloque_roa_2 on bd_roa_bloque (roa_roa_eeserial_number);
-alter table bd_roa_statement add constraint fk_bd_roa_statement_roa_3 foreign key (roa_roa_eeserial_number) references bd_roa (roa_eeserial_number) on delete restrict on update restrict;
-create index ix_bd_roa_statement_roa_3 on bd_roa_statement (roa_roa_eeserial_number);
+alter table bd_roa_bloque add constraint fk_bd_roa_bloque_bd_roa_2 foreign key (bd_roa_roa_eeserial_number) references bd_roa (roa_eeserial_number) on delete restrict on update restrict;
+create index ix_bd_roa_bloque_bd_roa_2 on bd_roa_bloque (bd_roa_roa_eeserial_number);
+alter table bd_roa_statement add constraint fk_bd_roa_statement_bd_roa_3 foreign key (bd_roa_roa_eeserial_number) references bd_roa (roa_eeserial_number) on delete restrict on update restrict;
+create index ix_bd_roa_statement_bd_roa_3 on bd_roa_statement (bd_roa_roa_eeserial_number);
 
 
 

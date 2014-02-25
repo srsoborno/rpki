@@ -15,10 +15,8 @@ public class BD_Roa extends play.db.ebean.Model {
 	@Id
 	public int roaEESerialNumber;
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date roaNotValidBefore;
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date roaNotValidAfter;
 	
 	public int roaAsn;
@@ -36,6 +34,12 @@ public class BD_Roa extends play.db.ebean.Model {
 	public Date roaEENotValidBefore;
 	public Date roaEENotValidAfter;
 	public boolean roaEEIsCa;
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	public List<BD_Roa_Bloque> roabloques;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	public List<BD_Roa_Statement> roaStatements;
 	
 	public static Finder<Integer,BD_Roa> find = new Finder<Integer,BD_Roa>(Integer.class, BD_Roa.class);
 	

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import play.data.*;
 import play.data.validation.Constraints.*;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 
 @Entity
 public class BD_Roa_Statement extends play.db.ebean.Model {
@@ -13,17 +14,14 @@ public class BD_Roa_Statement extends play.db.ebean.Model {
 	@GeneratedValue
 	public int id_statement;
 
+	public String stPrefijo;
 	
-	public BD_Roa_Bloque bloque;
+	public int stLargo;
 	
-	@Required
-	@ManyToOne(cascade=CascadeType.ALL)
-	//public List<BD_Statement> prefijos;
-	public BD_Roa roa = new BD_Roa();
 	
 	@Required
-	@Min(0)
-	@Max(32) //Ejemplo para marcar minimo y maximo del campo
 	public int largoMaximo;
+	
+	public static Finder<Integer,BD_Roa_Statement> find = new Finder<Integer,BD_Roa_Statement>(Integer.class, BD_Roa_Statement.class);
 	
 }

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import play.data.*;
 import play.data.validation.Constraints.*;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 
 
 @Entity
@@ -18,12 +19,9 @@ public class BD_Roa_Bloque extends Model {
 	public String prefijo;
 	
 	@Required
-	@MaxLength(2) //Ejemplo para maximo dos caracteres
 	public int largo;
 	
-	@Required
-	@ManyToOne(cascade=CascadeType.ALL)
-	//	public List<BD_Bloque> EERecursos;
-	public BD_Roa roa = new BD_Roa();
+	
+	public static Finder<Integer,BD_Roa_Bloque> find = new Finder<Integer,BD_Roa_Bloque>(Integer.class, BD_Roa_Bloque.class);
 
 }

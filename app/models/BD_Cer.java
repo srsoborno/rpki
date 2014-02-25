@@ -18,6 +18,7 @@ public class BD_Cer extends Model {
 	public String cerTipoArchivo;
 	public String cerPublicKey;
 	public String cerType;
+	public String timo;
 	
 	
 }

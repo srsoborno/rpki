@@ -27,7 +27,7 @@ public class Application extends Controller {
     
     public static Result getRoa(){
     	@SuppressWarnings({ "unchecked", "rawtypes" })
-		List <BD_Roa> entries = new Model.Finder(Integer.class, BD_Roa.class).all();
+		List <BD_Roa> entries = BD_Roa.find.all();
     	return ok(Json.toJson(entries));
     }
     

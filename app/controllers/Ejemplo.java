@@ -3,9 +3,12 @@ package controllers;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+
+import com.avaje.ebean.Ebean;
 
 import play.db.ebean.Model;
 
@@ -42,12 +45,18 @@ public class Ejemplo {
 				BD_Roa_Bloque aux = new BD_Roa_Bloque();
 				aux.prefijo = prefijosEE[i].split("/")[0];
 				aux.largo = Integer.parseInt(prefijosEE[i].split("/")[1]);
-				aux.roa = roa;
-				aux.save();
+				roa.roabloques.add(aux);
 			}
 			for (int i = 0; i < (Integer)mapList.get("PrefijosCant"); i++) {
 				BD_Roa_Statement aux2 = new BD_Roa_Statement();
-				
+				String [] str = mapList.get("PrefijosConMaximo"+i).toString().split("/");
+				System.out.println(str[0]);
+				System.out.println(str[1]);
+				List <BD_Roa_Bloque> any = BD_Roa_Bloque.find.where().like("prefijo", str[0]).like("largo", str[1].split("_")[0]).findList();
+				aux2.largoMaximo=Integer.parseInt(str[1].split("_")[1]);
+				aux2.stPrefijo=str[0];
+				aux2.stLargo=Integer.parseInt(str[1].split("_")[0]);
+				roa.roaStatements.add(aux2);
 				//aux2.bloque = mapList.get("PrefijosCant").toString().split("/")[0];
 				//aux.largo = Integer.parseInt(prefijosEE[i].split("/")[1]);
 				//aux.roa = roa;
