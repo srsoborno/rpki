@@ -1,0 +1,34 @@
+tipoArchivo = CER
+serialNumber = 16272585
+publicKey = [B@6c81526f
+keyUsage1 = false
+keyUsage0 = false
+type = X.509
+SIA1 = rsync://repository.lacnic.net/rpki/lacnic/0e3c9b47-5c7d-47c0-8d3c-737726debcba/58c5894d660ecb557fb8cd7e41fab2d56a653fd0.mft
+signatureAlgorithmName = SHA256withRSA
+version = 3
+SIA0 = rsync://repository.lacnic.net/rpki/lacnic/0e3c9b47-5c7d-47c0-8d3c-737726debcba/
+repositoryURI = rsync://repository.lacnic.net/rpki/lacnic/0e3c9b47-5c7d-47c0-8d3c-737726debcba/
+subjectName = CN=58c5894d660ecb557fb8cd7e41fab2d56a653fd0
+parentURI = rsync://repository.lacnic.net/rpki/lacnic/4025723758d10a0026b3035cc074bc111b5c2168.cer
+keyUsage6 = true
+keyUsage7 = false
+keyUsage8 = false
+hasUnsupportedCriticalExtension = true
+keyUsage2 = false
+keyUsage3 = false
+signature = [B@1e4b2d10
+keyUsage4 = false
+keyUsage5 = true
+prefijos = AS17401, 200.81.0.0/19, 200.81.192.0/18
+basicConstraints = 2147483647
+notValidAfter = 2015-03-02T15:00:00.000Z
+manifestURI = rsync://repository.lacnic.net/rpki/lacnic/0e3c9b47-5c7d-47c0-8d3c-737726debcba/58c5894d660ecb557fb8cd7e41fab2d56a653fd0.mft
+crlUri = rsync://repository.lacnic.net/rpki/lacnic/f52b0c01-84ba-406f-919b-e3164fefc3f9/4025723758d10a0026b3035cc074bc111b5c2168.crl
+AIA0 = rsync://repository.lacnic.net/rpki/lacnic/4025723758d10a0026b3035cc074bc111b5c2168.cer
+signatureAlgorithmId = 1.2.840.113549.1.1.11
+extendedKeyUsage = 
+subjectKeyIdentifier = [B@597b84f9
+issuerName = CN=production lacnic O\=lacnic
+isCA = true
+notValidBefore = 2012-11-29T13:35:34.000Z

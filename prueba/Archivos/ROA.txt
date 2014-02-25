@@ -1,0 +1,21 @@
+tipoArchivo = ROA
+asn = 262252
+EEIsCa = false
+signingTime = 2013-05-24T21:08:20.000Z
+EEIssuerName = CN=77c20cf221f6c63b235557a587f715b0f97c68d1
+EENotValidAfter = 2015-05-24T03:00:00.000Z
+EESerialNumber = 11021
+EENotValidBefore = 2013-05-24T03:00:00.000Z
+notValidAfter = 2015-05-24T03:00:00.000Z
+contentType = 1.2.840.113549.1.9.16.1.24
+EEPublicKey = [B@3462b48a
+EEPrefijos = 190.120.240.0/22, 2803:d900::/32
+parentCertificateURI = rsync://repository.lacnic.net/rpki/lacnic/f52b0c01-84ba-406f-919b-e3164fefc3f9/77c20cf221f6c63b235557a587f715b0f97c68d1.cer
+prefijosConMaximo0 = 190.120.240.0/24_24
+prefijosConMaximo1 = 190.120.241.0/24_24
+prefijosConMaximo2 = 190.120.242.0/24_24
+prefijosConMaximo3 = 190.120.243.0/24_24
+prefijosConMaximo4 = 2803:d900::/32_32
+crlURI = rsync://repository.lacnic.net/rpki/lacnic/0a96b0c7-ca23-4281-88b5-e291e6efa0d4/77c20cf221f6c63b235557a587f715b0f97c68d1.crl
+EESubjectName = CN=34bd2b0b76d7e1752cb8e8041fa8e9fb1455e707
+notValidBefore = 2013-05-24T03:00:00.000Z

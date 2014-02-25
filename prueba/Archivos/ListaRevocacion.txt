@@ -1,0 +1,8 @@
+number = 961
+nextUpdateTime = 2014-02-22T00:00:48.000Z
+issuer = CN=17e8f6b46f37259605d95989456283ba62e2bdfb
+thisUpdateTime = 2014-02-20T23:00:48.000Z
+revokados0 = 5073162,2013-09-05T21:10:14.000Z
+crlURI = 
+tipoArchivo = CRL
+version = 2

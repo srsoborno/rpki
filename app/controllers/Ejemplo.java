@@ -57,9 +57,6 @@ public class Ejemplo {
 				aux2.stPrefijo=str[0];
 				aux2.stLargo=Integer.parseInt(str[1].split("_")[0]);
 				roa.roaStatements.add(aux2);
-				//aux2.bloque = mapList.get("PrefijosCant").toString().split("/")[0];
-				//aux.largo = Integer.parseInt(prefijosEE[i].split("/")[1]);
-				//aux.roa = roa;
 			}
 			
 			
