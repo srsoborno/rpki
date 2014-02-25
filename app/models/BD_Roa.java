@@ -13,27 +13,31 @@ import play.db.ebean.Model;
 public class BD_Roa extends play.db.ebean.Model {
 
 	@Id
-	public int EESerial;
+	public int roaEESerialNumber;
 	
-	public Date fechaInicio;
-	public Date fechaFin;
-	public int asn;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date roaNotValidBefore;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date roaNotValidAfter;
 	
-	public Date fechaFirma;
-	public URI crlUri;
-	public URI cerPadre;
-	public String contentType;
-	public String EESujeto;
-	public String EEEmisor;
+	public int roaAsn;
 	
 	
-	public String EEClavePublica;
-	public Date EEfechaInicio;
-	public Date EEfechaFin;
-	public boolean EEBitCA;
+	public Date roaSigningTime;
+	public URI roaCrlUri;
+	public URI roaParentCertificateURI;
+	public String roaEESubjectName;
+	public String roaEEIssuerName;
+	public String roaContentType;
 	
-	public static Finder<String,BD_Roa> find = new Finder<String,BD_Roa>(String.class, BD_Roa.class);
+	
+	public String roaEEPublicKey;
+	public Date roaEENotValidBefore;
+	public Date roaEENotValidAfter;
+	public boolean roaEEIsCa;
+	
+	public static Finder<Integer,BD_Roa> find = new Finder<Integer,BD_Roa>(Integer.class, BD_Roa.class);
 	
 	
 }

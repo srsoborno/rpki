@@ -19,8 +19,8 @@ public class Application extends Controller {
     }
     
     public static Result addRoa(){
-    	BD_Roa entry = new BD_Roa();
-    	entry.EESerial = Integer.parseInt(Ejemplo.carga());
+    	BD_Roa entry;
+    	entry = Ejemplo.carga();
     	entry.save();
     	return getRoa();
     }
