@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.cert.CertificateParsingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -206,53 +207,39 @@ public class ParseRPKI {
 		return retorno;
 	}
 
-	private BD_Roa parseaROA(byte[] binario) throws IOException {
+	private BD_Roa parseaROA(byte[] binario) throws IOException, ParseException {
 		RoaCmsParser roaParser = new RoaCmsParser();
 		roaParser.parse("", binario);
 		// si llega aca es ROA
 		BD_Roa roa = new BD_Roa();
 		RoaCms roaCms = roaParser.getRoaCms();
-		
-		//retorno.put("NotValidBefore", roaCms.getNotValidBefore().toString());
-		roa.roaNotValidBefore = roaCms.getNotValidBefore().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidBefore().toString().replace("T", " ").replace("Z", ""));
-		//retorno.put("NotValidAfter", roaCms.getNotValidAfter().toString());
-		
-		roa.roaNotValidAfter = roaCms.getNotValidAfter().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidAfter().toString().replace("T", " ").replace("Z", ""));
-		//retorno.put("Asn", roaCms.getAsn().longValue());
-		
+
+		roa.roaNotValidBefore = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidBefore().toString().replace("T", " ").replace("Z", ""));		
+		roa.roaNotValidAfter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidAfter().toString().replace("T", " ").replace("Z", ""));		
 		roa.roaAsn = roaCms.getAsn().getValue().intValue();
+		
 		List<RoaPrefix> listaPrefijos = roaCms.getPrefixes();
 		for (int i = 0; i < listaPrefijos.size(); i++) {
 			BD_Roa_Statement aux2 = new BD_Roa_Statement();
-			//prefijosConMaximo[i] = listaPrefijos.get(i).getPrefix().toString() + "_" + listaPrefijos.get(i).getMaximumLength().toString();
-			//retorno.put("PrefijosConMaximo"+i, prefijosConMaximo[i]);
 			aux2.stPrefijo = listaPrefijos.get(i).getPrefix().toString().split("/")[0];
 			aux2.stLargo = Integer.parseInt(listaPrefijos.get(i).getPrefix().toString().split("/")[1]);
 			aux2.largoMaximo = listaPrefijos.get(i).getMaximumLength();
 			roa.roaStatements.add(aux2);
 		}
 		
-		//retorno.put("SigningTime", roaCms.getSigningTime().toDate());
-		roa.roaSigningTime = roaCms.getSigningTime().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(mapList.get("SigningTime").toString().replace("T", " ").replace("Z", ""));
-		//retorno.put("CrlUri", roaCms.getCrlUri().toString());
+		roa.roaSigningTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getSigningTime().toString().replace("T", " ").replace("Z", ""));
 		roa.roaCrlUri = roaCms.getCrlUri();
-		//retorno.put("ParentCertificateURI", roaCms.getParentCertificateUri().toString());
 		roa.roaParentCertificateURI = roaCms.getParentCertificateUri();
-		//retorno.put("ContentType", roaCms.getContentType().toString());
 		roa.roaContentType = roaCms.getContentType().toString();
 		X509ResourceCertificate x509rc = roaCms.getCertificate();
 		parsearEE(roa, x509rc);
 		return roa;
 	}
 
-	private void parsearEE(BD_Roa roa, X509ResourceCertificate x509rc) throws IOException {
-		//retorno.put("EESerialNumber", x509rc.getSerialNumber());
+	private void parsearEE(BD_Roa roa, X509ResourceCertificate x509rc) throws IOException, ParseException {
 		roa.roaEESerialNumber = x509rc.getSerialNumber().intValue();
-		//retorno.put("EESubjectName", x509rc.getSubject().getName());
 		roa.roaEESubjectName =  x509rc.getSubject().getName();
-		//retorno.put("EEIssuerName", x509rc.getIssuer().getName());
 		roa.roaEEIssuerName = x509rc.getIssuer().getName();
-		//retorno.put("EEPrefijos", x509rc.getResources().toString());
 		String []prefijosEE = x509rc.getResources().toString().split(",");
 		for (int i = 0; i < prefijosEE.length; i++) {
 			BD_Roa_Bloque aux = new BD_Roa_Bloque();
@@ -260,13 +247,9 @@ public class ParseRPKI {
 			aux.largo = Integer.parseInt(prefijosEE[i].split("/")[1]);
 			roa.roabloques.add(aux);
 		}
-		//retorno.put("EEPublicKey", Base64.encodeBase64(x509rc.getPublicKey().getEncoded()));
 		roa.roaEEPublicKey = Base64.encodeBase64(x509rc.getPublicKey().getEncoded()).toString();
-		//retorno.put("EENotValidBefore", x509rc.getValidityPeriod().getNotValidBefore().toString());
-		roa.roaEENotValidBefore = x509rc.getValidityPeriod().getNotValidBefore().toDate();
-		//retorno.put("EENotValidAfter", x509rc.getValidityPeriod().getNotValidAfter().toString());
-		roa.roaEENotValidAfter = x509rc.getValidityPeriod().getNotValidAfter().toDate();
-		//retorno.put("EEIsCa", String.valueOf(x509rc.isCa()));
+		roa.roaEENotValidBefore = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(x509rc.getValidityPeriod().getNotValidBefore().toString().replace("T", " ").replace("Z", ""));
+		roa.roaEENotValidAfter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(x509rc.getValidityPeriod().getNotValidAfter().toString().replace("T", " ").replace("Z", ""));
 		roa.roaEEIsCa = x509rc.isCa();
 	}
 

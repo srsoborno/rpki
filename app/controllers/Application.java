@@ -20,7 +20,7 @@ public class Application extends Controller {
     
     public static Result addRoa(){
     	BD_Roa entry;
-    	entry = (BD_Roa)Ejemplo.carga();
+    	entry = (BD_Roa)Manager.carga();
     	entry.save();
     	return getRoa();
     }
