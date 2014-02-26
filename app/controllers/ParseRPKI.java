@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.cert.CertificateParsingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +14,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import models.BD_Roa;
+import models.BD_Roa_Bloque;
+import models.BD_Roa_Statement;
 import net.ripe.commons.certification.cms.manifest.ManifestCms;
 import net.ripe.commons.certification.cms.manifest.ManifestCmsParser;
 import net.ripe.commons.certification.cms.roa.RoaCms;
@@ -22,9 +26,12 @@ import net.ripe.commons.certification.crl.X509Crl;
 import net.ripe.commons.certification.crl.X509Crl.Entry;
 import net.ripe.commons.certification.x509cert.X509CertificateInformationAccessDescriptor;
 import net.ripe.commons.certification.x509cert.X509ResourceCertificate;
+import net.ripe.ipresource.IpRange;
 import net.ripe.ipresource.IpResourceSet;
 
 import org.apache.commons.codec.binary.Base64;
+
+import play.db.ebean.Model;
 
 public class ParseRPKI {
 	private String directorioAuxiliar;
@@ -33,27 +40,26 @@ public class ParseRPKI {
 		setDirectorioAuxiliar(directorioAuxiliar);
 	}
 
-	public Map<String, Object> fileToParameters(byte[] binario) {
+	public Model fileToParameters(byte[] binario) {
 		// devuelve los datos del rpki object
-		Map<String, Object> retorno = new HashMap<String, Object>();
 		try {
-			return parseaROA(binario, retorno);
+			return parseaROA(binario);
 		} catch (Exception e) {
 			try {
-				return parseaCER(binario, retorno);
+				//return parseaCER(binario, retorno);
 			} catch (Exception e1) {
 				try {
-					return parseaCRL(binario, retorno);
+					//return parseaCRL(binario, retorno);
 				} catch (Exception e3) {
 					try {
-						return parseaMFT(binario, retorno);
+						//return parseaMFT(binario, retorno);
 					} catch (Exception e4) {
-						retorno.put("tipoArchivo", "NONE");
+						return null;
 					}
 				}
 			}
 		}
-		return retorno;
+		return null;
 	}
 
 	private Map<String, Object> parseaMFT(byte[] binario, Map<String, Object> retorno) throws Exception {
@@ -91,7 +97,7 @@ public class ParseRPKI {
 		}
 		//retorno.put("files", filesManifest);
 
-		parsearEE(retorno, x509rc);
+		//parsearEE(retorno, x509rc);
 		return retorno;
 	}
 
@@ -200,42 +206,68 @@ public class ParseRPKI {
 		return retorno;
 	}
 
-	private Map<String, Object> parseaROA(byte[] binario, Map<String, Object> retorno) throws IOException {
+	private BD_Roa parseaROA(byte[] binario) throws IOException {
 		RoaCmsParser roaParser = new RoaCmsParser();
 		roaParser.parse("", binario);
 		// si llega aca es ROA
-		retorno.put("TipoArchivo", "ROA");
-		RoaCms roa = roaParser.getRoaCms();
-		retorno.put("NotValidBefore", roa.getNotValidBefore().toString());
-		retorno.put("NotValidAfter", roa.getNotValidAfter().toString());
-		retorno.put("Asn", roa.getAsn().longValue());
-		List<RoaPrefix> listaPrefijos = roa.getPrefixes();
-		String[] prefijosConMaximo = new String[listaPrefijos.size()];
-		retorno.put("PrefijosCant", listaPrefijos.size());
+		BD_Roa roa = new BD_Roa();
+		RoaCms roaCms = roaParser.getRoaCms();
+		
+		//retorno.put("NotValidBefore", roaCms.getNotValidBefore().toString());
+		roa.roaNotValidBefore = roaCms.getNotValidBefore().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidBefore().toString().replace("T", " ").replace("Z", ""));
+		//retorno.put("NotValidAfter", roaCms.getNotValidAfter().toString());
+		
+		roa.roaNotValidAfter = roaCms.getNotValidAfter().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(roaCms.getNotValidAfter().toString().replace("T", " ").replace("Z", ""));
+		//retorno.put("Asn", roaCms.getAsn().longValue());
+		
+		roa.roaAsn = roaCms.getAsn().getValue().intValue();
+		List<RoaPrefix> listaPrefijos = roaCms.getPrefixes();
 		for (int i = 0; i < listaPrefijos.size(); i++) {
-			prefijosConMaximo[i] = listaPrefijos.get(i).getPrefix().toString() + "_" + listaPrefijos.get(i).getMaximumLength().toString();
-			retorno.put("PrefijosConMaximo"+i, prefijosConMaximo[i]);
+			BD_Roa_Statement aux2 = new BD_Roa_Statement();
+			//prefijosConMaximo[i] = listaPrefijos.get(i).getPrefix().toString() + "_" + listaPrefijos.get(i).getMaximumLength().toString();
+			//retorno.put("PrefijosConMaximo"+i, prefijosConMaximo[i]);
+			aux2.stPrefijo = listaPrefijos.get(i).getPrefix().toString().split("/")[0];
+			aux2.stLargo = Integer.parseInt(listaPrefijos.get(i).getPrefix().toString().split("/")[1]);
+			aux2.largoMaximo = listaPrefijos.get(i).getMaximumLength();
+			roa.roaStatements.add(aux2);
 		}
-		retorno.put("SigningTime", roa.getSigningTime().toString());
-		retorno.put("CrlUri", roa.getCrlUri().toString());
-		retorno.put("ParentCertificateURI", roa.getParentCertificateUri().toString());
-		retorno.put("ContentType", roa.getContentType().toString());
-
-		X509ResourceCertificate x509rc = roa.getCertificate();
-		parsearEE(retorno, x509rc);
-
-		return retorno;
+		
+		//retorno.put("SigningTime", roaCms.getSigningTime().toDate());
+		roa.roaSigningTime = roaCms.getSigningTime().toDate();//new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").parse(mapList.get("SigningTime").toString().replace("T", " ").replace("Z", ""));
+		//retorno.put("CrlUri", roaCms.getCrlUri().toString());
+		roa.roaCrlUri = roaCms.getCrlUri();
+		//retorno.put("ParentCertificateURI", roaCms.getParentCertificateUri().toString());
+		roa.roaParentCertificateURI = roaCms.getParentCertificateUri();
+		//retorno.put("ContentType", roaCms.getContentType().toString());
+		roa.roaContentType = roaCms.getContentType().toString();
+		X509ResourceCertificate x509rc = roaCms.getCertificate();
+		parsearEE(roa, x509rc);
+		return roa;
 	}
 
-	private void parsearEE(Map<String, Object> retorno, X509ResourceCertificate x509rc) throws IOException {
-		retorno.put("EESerialNumber", x509rc.getSerialNumber());
-		retorno.put("EESubjectName", x509rc.getSubject().getName());
-		retorno.put("EEIssuerName", x509rc.getIssuer().getName());
-		retorno.put("EEPrefijos", x509rc.getResources().toString());
-		retorno.put("EEPublicKey", Base64.encodeBase64(x509rc.getPublicKey().getEncoded()));
-		retorno.put("EENotValidBefore", x509rc.getValidityPeriod().getNotValidBefore().toString());
-		retorno.put("EENotValidAfter", x509rc.getValidityPeriod().getNotValidAfter().toString());
-		retorno.put("EEIsCa", String.valueOf(x509rc.isCa()));
+	private void parsearEE(BD_Roa roa, X509ResourceCertificate x509rc) throws IOException {
+		//retorno.put("EESerialNumber", x509rc.getSerialNumber());
+		roa.roaEESerialNumber = x509rc.getSerialNumber().intValue();
+		//retorno.put("EESubjectName", x509rc.getSubject().getName());
+		roa.roaEESubjectName =  x509rc.getSubject().getName();
+		//retorno.put("EEIssuerName", x509rc.getIssuer().getName());
+		roa.roaEEIssuerName = x509rc.getIssuer().getName();
+		//retorno.put("EEPrefijos", x509rc.getResources().toString());
+		String []prefijosEE = x509rc.getResources().toString().split(",");
+		for (int i = 0; i < prefijosEE.length; i++) {
+			BD_Roa_Bloque aux = new BD_Roa_Bloque();
+			aux.prefijo = prefijosEE[i].split("/")[0];
+			aux.largo = Integer.parseInt(prefijosEE[i].split("/")[1]);
+			roa.roabloques.add(aux);
+		}
+		//retorno.put("EEPublicKey", Base64.encodeBase64(x509rc.getPublicKey().getEncoded()));
+		roa.roaEEPublicKey = Base64.encodeBase64(x509rc.getPublicKey().getEncoded()).toString();
+		//retorno.put("EENotValidBefore", x509rc.getValidityPeriod().getNotValidBefore().toString());
+		roa.roaEENotValidBefore = x509rc.getValidityPeriod().getNotValidBefore().toDate();
+		//retorno.put("EENotValidAfter", x509rc.getValidityPeriod().getNotValidAfter().toString());
+		roa.roaEENotValidAfter = x509rc.getValidityPeriod().getNotValidAfter().toDate();
+		//retorno.put("EEIsCa", String.valueOf(x509rc.isCa()));
+		roa.roaEEIsCa = x509rc.isCa();
 	}
 
 	public byte[] obtenerByteDesdeRSync(String rutaArchivoRSYnc) throws Exception {
