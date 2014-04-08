@@ -1,5 +1,7 @@
 package models;
 
+import java.net.URI;
+
 import javax.persistence.*;
 
 import play.db.ebean.Model;
@@ -15,4 +17,5 @@ public class BD_Mft_Files extends Model {
 	
 	public String mftFileName;
 	public String mftFileHash;
+	public URI mftFileUri;
 }

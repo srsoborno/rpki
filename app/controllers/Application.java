@@ -1,35 +1,68 @@
 package controllers;
 
-import java.util.List;
+import java.util.Map;
 
-import models.BD_Roa;
-import play.*;
-import play.data.Form;
-import play.db.ebean.Model;
-import play.libs.Json;
 import play.mvc.*;
+import play.data.*;
+import play.db.ebean.Model;
+import static play.data.Form.*;
 
 import views.html.*;
-import views.html.helper.form;
 
+import models.*;
+
+/**
+ * Manage the Application
+ */
 public class Application extends Controller {
-
+    
+    /**
+     * This result directly redirect to application home.
+     */
+    public static Result GO_HOME = redirect(
+        routes.Application.list(0, "stPrefijoStart", "asc")
+    );
+    
+    /**
+     * Handle default path requests
+     */
     public static Result index() {
-        return ok(index.render("Hola Timmy!!"));
+        return GO_HOME;
+    }
+
+    /**
+     * Display the paginated list of ROA´s
+     *
+     * @param page Current page number (starts from 0)
+     * @param sortBy Column to be sorted
+     * @param order Sort order (either asc or desc)
+     */
+    public static Result list(int page, String sortBy, String order) {
+        return ok(
+            list.render(
+            	//El segundo parametros '0' indica que no se especifica el paginado
+                BD_Roa_Statement.page(page, 0, sortBy, order),
+                sortBy, order
+            )
+        );
     }
     
-    public static Result addRoa(){
-    	BD_Roa entry;
-    	entry = (BD_Roa)Manager.carga();
-    	entry.save();
-    	return getRoa();
-    }
-    
-    public static Result getRoa(){
-    	@SuppressWarnings({ "unchecked", "rawtypes" })
-		List <BD_Roa> entries = BD_Roa.find.all();
-    	return ok(Json.toJson(entries));
-    }
-    
+    /**
+     * Create the MapList of Roa's.
+     */
+//    public static Result create() {
+//    	Map<String, Model> mapList = Manager.carga();
+//    	for (Map.Entry<String, Model> entry : mapList.entrySet()) {
+//    		try {
+//    			entry.getValue().save();
+//			} catch (Exception e) {
+//				flash("success", "Problem saving data in DB");
+//				break;
+//			}
+//    	    // ...
+//    	}
+//        return GO_HOME;
+//    }
 
 }
+            

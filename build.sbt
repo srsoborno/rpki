@@ -1,12 +1,9 @@
-name := "fooecplipse"
+import play.Project._
 
-version := "1.0-SNAPSHOT"
+name := "infoRPKI"
 
-libraryDependencies ++= Seq(
-  javaJdbc,
-  javaEbean,
-  cache,
-  "mysql" % "mysql-connector-java" % "5.1.29"
-)     
+version := "1.0"
 
-play.Project.playJavaSettings
+libraryDependencies ++= Seq(javaJdbc, javaEbean, "mysql" % "mysql-connector-java" % "5.1.29")
+
+playJavaSettings

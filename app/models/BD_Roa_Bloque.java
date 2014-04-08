@@ -16,10 +16,9 @@ public class BD_Roa_Bloque extends Model {
 	public int id_bloque;
 	
 	
-	public String prefijo;
+	public String bloquePrefijoStart;
+	public String bloquePrefijoEnd;
 	
-	@Required
-	public int largo;
 	
 	
 	public static Finder<Integer,BD_Roa_Bloque> find = new Finder<Integer,BD_Roa_Bloque>(Integer.class, BD_Roa_Bloque.class);
