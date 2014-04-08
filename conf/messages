@@ -1,0 +1,5 @@
+# Messages
+
+prefix.list.title={0,choice,0#No prefixes|1#One prefix|1<{0,number,integer} prefixes} found
+
+
